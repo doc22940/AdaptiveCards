@@ -38,6 +38,7 @@ jobs:
     #    uses a compiled language
 
     - run: |
+       cd source/nodejs
        npm i
        npx lerna bootstrap
        npx lerna run build
@@ -162,7 +163,7 @@ jobs:
     # Command-line programs to run using the OS shell.
     # https://git.io/JvXDl
 
-    - run: codebuild -sdk iphonesimulator -configuration Release -workspace AdaptiveCards/AdaptiveCards.xcworkspace -scheme ADCIOSVisualizer -destination platform=iOS Simulator,name=iPhone 7,OS=10.3.1 build
+    - run: xcodebuild -sdk iphonesimulator -configuration Release -workspace AdaptiveCards/AdaptiveCards.xcworkspace -scheme ADCIOSVisualizer -destination platform=iOS Simulator,name=iPhone 7,OS=10.3.1 build
       working-directory: source/ios
 
     - name: Perform CodeQL Analysis
