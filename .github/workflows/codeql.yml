@@ -6,11 +6,10 @@ on:
     - cron: '0 0 * * 0'
 
 jobs:
-  CodeQL-Build:
+  CodeQL-Build-NodeJS:
 
     strategy:
       fail-fast: false
-
 
     # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
     runs-on: ubuntu-latest
@@ -31,16 +30,136 @@ jobs:
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
 
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
+    # Command-line programs to run using the OS shell.
+    # https://git.io/JvXDl
 
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
+    # If the Autobuild fails above, remove it and uncomment the following three lines
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
     #- run: |
     #   make bootstrap
     #   make release
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+
+  CodeQL-Build-Android:
+
+    strategy:
+      fail-fast: false
+
+    # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      languages: java
+      # Override language selection by uncommenting this and choosing your languages
+      # with:
+      #   languages: go, javascript, csharp, python, cpp, java
+
+    # Command-line programs to run using the OS shell.
+    # https://git.io/JvXDl
+
+    #  If the Autobuild fails above, remove it and uncomment the following three lines
+    #    and modify them (or add more) to build your code if your project
+    #    uses a compiled language
+
+    - run: gradlew build
+      working-directory: source/android
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+
+  CodeQL-Build-Dotnet:
+
+    strategy:
+      fail-fast: false
+
+    # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      languages: csharp
+      # Override language selection by uncommenting this and choosing your languages
+      # with:
+      #   languages: go, javascript, csharp, python, cpp, java
+
+    # Command-line programs to run using the OS shell.
+    # https://git.io/JvXDl
+
+    - run: msbuild AdaptiveCards.sln
+      working-directory: source/dotnet
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+
+  CodeQL-Build-UWP:
+
+    strategy:
+      fail-fast: false
+
+    # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      languages: cpp
+      # Override language selection by uncommenting this and choosing your languages
+      # with:
+      #   languages: go, javascript, csharp, python, cpp, java
+
+    # Command-line programs to run using the OS shell.
+    # https://git.io/JvXDl
+
+    - run: msbuild AdaptiveCards.sln
+      working-directory: source/uwp
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+
+  CodeQL-Build-IOS:
+
+    strategy:
+      fail-fast: false
+
+    # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      #languages: cpp
+      # Override language selection by uncommenting this and choosing your languages
+      # with:
+      #   languages: go, javascript, csharp, python, cpp, java
+
+    # Command-line programs to run using the OS shell.
+    # https://git.io/JvXDl
+
+    - run: codebuild -sdk iphonesimulator -configuration Release -workspace AdaptiveCards/AdaptiveCards.xcworkspace -scheme ADCIOSVisualizer -destination platform=iOS Simulator,name=iPhone 7,OS=10.3.1 build
+      working-directory: source/ios
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
