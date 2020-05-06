@@ -27,8 +27,8 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below).
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    # - name: Autobuild
+    #   uses: github/codeql-action/autobuild@v1
 
     # Command-line programs to run using the OS shell.
     # https://git.io/JvXDl
@@ -37,9 +37,11 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    #- run: |
-    #   make bootstrap
-    #   make release
+    - run: |
+       npm i
+       npx lerna bootstrap
+       npx lerna run build
+       npx lerna run release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
@@ -71,7 +73,7 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - run: gradlew build
+    - run: ./gradlew build
       working-directory: source/android
 
     - name: Perform CodeQL Analysis
@@ -100,8 +102,10 @@ jobs:
     # Command-line programs to run using the OS shell.
     # https://git.io/JvXDl
 
-    - run: msbuild AdaptiveCards.sln
-      working-directory: source/dotnet
+    - run: |
+        cd source/dotnet
+        where msbuild
+        msbuild AdaptiveCards.sln
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
