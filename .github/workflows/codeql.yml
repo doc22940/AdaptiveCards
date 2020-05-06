@@ -109,8 +109,8 @@ jobs:
 
     - name: Nuget restore
       uses: nuget/setup-nuget@v1
-        with:
-          nuget-version: '5.x'
+      with:
+        nuget-version: '5.x'
 
     - run: cd source\dotnet && nuget restore AdaptiveCards.sln
       shell: cmd
