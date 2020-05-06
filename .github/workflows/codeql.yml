@@ -42,7 +42,6 @@ jobs:
        npm i
        npx lerna bootstrap
        npx lerna run build
-       npx lerna run release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
@@ -103,10 +102,8 @@ jobs:
     # Command-line programs to run using the OS shell.
     # https://git.io/JvXDl
 
-    - run: |
-        cd source/dotnet
-        where msbuild
-        msbuild AdaptiveCards.sln
+    - run: cd source\dotnet && where msbuild && msbuild AdaptiveCards.sln
+      shell: cmd
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
@@ -135,6 +132,7 @@ jobs:
     # https://git.io/JvXDl
 
     - run: msbuild AdaptiveCards.sln
+      shell: cmd
       working-directory: source/uwp
 
     - name: Perform CodeQL Analysis
@@ -163,7 +161,7 @@ jobs:
     # Command-line programs to run using the OS shell.
     # https://git.io/JvXDl
 
-    - run: xcodebuild -sdk iphonesimulator -configuration Release -workspace AdaptiveCards/AdaptiveCards.xcworkspace -scheme ADCIOSVisualizer -destination platform=iOS Simulator,name=iPhone 7,OS=10.3.1 build
+    - run: xcodebuild -sdk iphonesimulator -configuration Release -workspace AdaptiveCards/AdaptiveCards.xcworkspace -scheme ADCIOSVisualizer -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1' build
       working-directory: source/ios
 
     - name: Perform CodeQL Analysis
