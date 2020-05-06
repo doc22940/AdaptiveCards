@@ -107,7 +107,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.0
 
-    - name: Nuget restore
+    - name: Nuget setup
       uses: nuget/setup-nuget@v1
       with:
         nuget-version: '5.x'
@@ -115,7 +115,8 @@ jobs:
     - run: cd source\dotnet && nuget restore AdaptiveCards.sln
       shell: cmd
 
-    - run: cd source\dotnet && where msbuild && msbuild AdaptiveCards.sln
+    # nowarn here is just to remove warnings for missing public docs -- increases log readability
+    - run: cd source\dotnet && msbuild AdaptiveCards.sln /target:Clean;Build /m /p:nowarn=1591
       shell: cmd
 
     - name: Perform CodeQL Analysis
@@ -147,7 +148,7 @@ jobs:
     # Command-line programs to run using the OS shell.
     # https://git.io/JvXDl
 
-    - run: msbuild AdaptiveCards.sln
+    - run: msbuild AdaptiveCards.sln /target:Clean;Build /m
       shell: cmd
       working-directory: source/uwp
 
